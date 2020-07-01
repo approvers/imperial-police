@@ -48,7 +48,7 @@ class MainClient(discord.Client):
 
 
 if __name__ == "__main__":
-    TOKEN = "NzI3NTExMzQ2MjU3NzIzNDYz.Xvs6KA.LzUGRnk57OgqImXk6vCNFcgc_H0"
+    TOKEN = os.getenv("TOKEN")
 
     client = MainClient(TOKEN)
     client.run()
