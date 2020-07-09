@@ -1,13 +1,17 @@
 import asyncio
 import os
+import re
 
 import discord
+import datetime
 
 
+ROYAL_EMBLEM_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Imperial_Seal_of_Japan.svg/500px-Imperial_Seal_of_Japan.svg.png"
+NAME_REGEX = re.compile(r"(.*?)が.*に入りました|から抜けました")
 ROYAL_ROOM_ID = 727133544773845013
 LAWLESS_CHANNEL_ID = 690909527461199922
 PRISON_CHANNEL_ID = 724591472061579295
-ROYAL_QUALIFICATION_ROLE_ID = 727046372456661012
+ROYAL_QUALIFICATION_ROLE_ID = int(os.getenv("ROYAL_ROLE"))
 
 NATIONAL_ANTHEM = "ast/snd/broken_national_anthem.wav"
 
@@ -35,24 +39,24 @@ class MainClient(discord.Client):
         self.prison_channel = self.get_channel(PRISON_CHANNEL_ID)
         self.lawless_channel = self.get_channel(LAWLESS_CHANNEL_ID)
         self.royal_family = self.royal_qualification.members
-        self.royal_family_ids = map(lambda x: x.id, self.royal_family)
+        self.royal_family_ids = [royal_user.id for royal_user in self.royal_family]
 
     async def on_message(self, message: discord.Message):
         if not message.embeds:
             return
-        if includes(message.embeds[0].thumbnail.url, self.royal_family_ids):
-            await message.channel.send("卍 還幸 卍")
+        embed = message.embeds[0]
+        if includes(embed.thumbnail.url, self.royal_family_ids):
+            if embed.description == "何かが始まる予感がする。":
+                parsed_display_name = re.findall(NAME_REGEX, embed.title)[0]
+                await message.channel.send(embed=embed_factory(parsed_display_name, self.user.id, self.user.avatar, True))
+                return
+            if embed.description == "あいつは良い奴だったよ...":
+                parsed_display_name = re.findall(NAME_REGEX, embed.title)[0]
+                await message.channel.send(embed=embed_factory(parsed_display_name, self.user.id, self.user.avatar, False))
+                return
             await message.delete(delay=None)
 
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
-        if member.id == self.user.id:
-            if before.channel is not None and after.channel is not None:
-                return
-            if after.channel is not None:
-                self.is_voice_connected = True
-            if before.channel is not None:
-                self.is_voice_connected = False
-
         if after.channel != self.royal_room:
             return
         if member not in self.royal_family:
@@ -60,7 +64,7 @@ class MainClient(discord.Client):
 
     async def execution(self, member):
         await member.move_to(self.prison_channel, reason="皇宮警察だ！！！")
-        if self.is_voice_connected:
+        if not self.voice_clients:
             return
         try:
             voice_client = await self.prison_channel.connect(reconnect=False)
@@ -76,6 +80,19 @@ def includes(query: str, search_from: list):
         if str(test_case) in str(query):
             return True
     return False
+
+
+def embed_factory(member_name: str, my_id: int, my_avatar: str, is_in: bool) -> discord.Embed:
+    message_in_or_out = "行幸" if is_in else "還幸"
+    embed = discord.Embed(
+        title="†卍 {} 卍† ".format(message_in_or_out),
+        description="{} が皇室に{}なさいました。".format(member_name, message_in_or_out),
+        color=0xffd800)
+    embed.set_author(
+        name="皇宮警察からのお知らせ",
+        icon_url="https://cdn.discordapp.com/avatars/{}/{}.png".format(my_id, my_avatar))
+    embed.set_thumbnail(url=ROYAL_EMBLEM_URL)
+    return embed
 
 
 if __name__ == "__main__":
