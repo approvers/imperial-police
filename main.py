@@ -7,7 +7,8 @@ import datetime
 
 
 ROYAL_EMBLEM_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Imperial_Seal_of_Japan.svg/500px-Imperial_Seal_of_Japan.svg.png"
-NAME_REGEX = re.compile(r"(.*?)が.*に入りました|から抜けました")
+NAME_REGEX_IN = re.compile(r"(.*?)が.*に入りました")
+NAME_REGEX_OUT = re.compile(r"(.*?)が.*から抜けました")
 ROYAL_ROOM_ID = 727133544773845013
 LAWLESS_CHANNEL_ID = 690909527461199922
 PRISON_CHANNEL_ID = 724591472061579295
@@ -47,12 +48,12 @@ class MainClient(discord.Client):
         embed = message.embeds[0]
         if includes(embed.thumbnail.url, self.royal_family_ids):
             if embed.description == "何かが始まる予感がする。":
-                parsed_display_name = re.findall(NAME_REGEX, embed.title)[0]
+                parsed_display_name = re.findall(NAME_REGEX_IN, embed.title)[0]
                 await message.channel.send(embed=embed_factory(parsed_display_name, self.user.id, self.user.avatar, True))
-                return
-            if embed.description == "あいつは良い奴だったよ...":
-                parsed_display_name = re.findall(NAME_REGEX, embed.title)[0]
+            elif embed.description == "あいつは良い奴だったよ...":
+                parsed_display_name = re.findall(NAME_REGEX_OUT, embed.title)[0]
                 await message.channel.send(embed=embed_factory(parsed_display_name, self.user.id, self.user.avatar, False))
+            else:
                 return
             await message.delete(delay=None)
 
