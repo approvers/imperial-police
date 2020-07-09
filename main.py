@@ -83,10 +83,10 @@ def includes(query: str, search_from: list):
 
 
 def embed_factory(member_name: str, my_id: int, my_avatar: str, is_in: bool) -> discord.Embed:
-    message_in_or_out = "行幸" if is_in else "還幸"
+    message_in_or_out = "還幸" if is_in else "行幸"
     embed = discord.Embed(
         title="†卍 {} 卍† ".format(message_in_or_out),
-        description="{} が皇室に{}なさいました。".format(member_name, message_in_or_out),
+        description="{} が{}なさいました。".format(member_name, message_in_or_out),
         color=0xffd800)
     embed.set_author(
         name="皇宮警察からのお知らせ",
