@@ -47,6 +47,8 @@ class MainClient(discord.Client):
             return
         embed = message.embeds[0]
         if includes(embed.thumbnail.url, self.royal_family_ids):
+            if "皇室" not in embed.title:
+                return
             if embed.description == "何かが始まる予感がする。":
                 parsed_display_name = re.findall(NAME_REGEX_IN, embed.title)[0]
                 await message.channel.send(embed=embed_factory(parsed_display_name, self.user.id, self.user.avatar, True))
