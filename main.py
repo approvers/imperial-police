@@ -5,6 +5,8 @@ import re
 import discord
 import datetime
 
+from lib.utils import is_empty
+
 
 ROYAL_EMBLEM_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Imperial_Seal_of_Japan.svg/500px-Imperial_Seal_of_Japan.svg.png"
 NAME_REGEX_IN = re.compile(r"(.*?)が.*に入りました")
@@ -67,7 +69,7 @@ class MainClient(discord.Client):
 
     async def execution(self, member):
         await member.move_to(self.prison_channel, reason="皇宮警察だ！！！")
-        if not self.voice_clients:
+        if not is_empty(self.voice_clients):
             return
         try:
             voice_client = await self.prison_channel.connect(reconnect=False)
