@@ -1,0 +1,10 @@
+version: '3'
+services:
+  imperial-police:
+    restart: always
+    build: .
+    container_name: 'imperial-police'
+    working_dir: '/root/'
+    tty: true
+    volumes:
+      - ./opt:/root/opt
