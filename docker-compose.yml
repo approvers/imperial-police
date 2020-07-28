@@ -1,10 +1,11 @@
 version: '3'
+
 services:
   imperial-police:
     restart: always
     build: .
     container_name: 'imperial-police'
+    environment:
+      - IMPERIAL_POLICE_TOKEN=${IMPERIAL_POLICE_TOKEN}
     working_dir: '/root/'
     tty: true
-    volumes:
-      - ./opt:/root/opt
