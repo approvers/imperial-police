@@ -101,7 +101,7 @@ def embed_factory(member_name: str, my_id: int, my_avatar: str, is_in: bool) -> 
 
 
 if __name__ == "__main__":
-    TOKEN = os.getenv("TOKEN")
+    TOKEN = os.getenv("IMPERIAL_POLICE_TOKEN")
 
     client = MainClient(TOKEN)
     client.run()

@@ -130,3 +130,6 @@ dmypy.json
 ffmpeg.exe
 ffplay.exe
 ffprobe.exe
+
+# idea
+.idea/
