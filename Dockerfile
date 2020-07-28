@@ -18,7 +18,7 @@ ENV TERM xtermdocker-attachingdocker-attaching
 
 RUN mkdir /bot
 WORKDIR /bot
-COPY --from=build ./ /bot/imperial-police
+COPY ./ /bot/imperial-police
 
 WORKDIR /bot/imperial-police
 RUN pip install -r requirements.txt
