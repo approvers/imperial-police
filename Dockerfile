@@ -18,7 +18,7 @@ ENV TERM xtermdocker-attachingdocker-attaching
 
 RUN mkdir /bot
 WORKDIR /bot
-RUN git clone https://github.com/approvers/imperial-police.git
+COPY --from=build ./ /bot/imperial-police
 
 WORKDIR /bot/imperial-police
 RUN pip install -r requirements.txt
