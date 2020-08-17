@@ -1,5 +1,6 @@
 import asyncio
 import os
+import random
 import re
 
 import discord
@@ -45,6 +46,11 @@ class MainClient(discord.Client):
         self.royal_family_ids = [royal_user.id for royal_user in self.royal_family]
 
     async def on_message(self, message: discord.Message):
+        if "???" in message.content and not message.author.bot:
+            length = int(random.randint(1, 30))
+            content = questions(length)
+            await message.channel.send(content)
+
         if not message.embeds:
             return
         embed = message.embeds[0]
@@ -98,6 +104,20 @@ def embed_factory(member_name: str, my_id: int, my_avatar: str, is_in: bool) -> 
         icon_url="https://cdn.discordapp.com/avatars/{}/{}.png".format(my_id, my_avatar))
     embed.set_thumbnail(url=ROYAL_EMBLEM_URL)
     return embed
+
+
+def questions(length: int) -> str:
+    result = ""
+
+    for n in range(length):
+        random_num = random.randint(0, 1)
+
+        if random_num:
+            result += "?"
+        else:
+            result += "？"
+
+    return result
 
 
 if __name__ == "__main__":
