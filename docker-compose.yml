@@ -7,5 +7,4 @@ services:
     container_name: 'imperial-police'
     environment:
       - IMPERIAL_POLICE_TOKEN=${IMPERIAL_POLICE_TOKEN}
-    working_dir: '/root/'
     tty: true
