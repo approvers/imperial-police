@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: imperial-police
 
 jobs:
-  push:
+  image_build_test:
     name: Build test of Docker Image
     runs-on: ubuntu-latest
 
