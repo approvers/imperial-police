@@ -1,4 +1,4 @@
-name: Docker
+name: Build test of Docker Image
 
 on:
   push:
@@ -10,22 +10,11 @@ env:
 
 jobs:
   push:
+    name: Build test of Docker Image
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Build an image with a tag
-        run: docker build -t app .
-
-      - name: Log into the registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push the image
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          [ "$VERSION" == "master" ] && VERSION=latest
-          docker tag app $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+        run: docker build -t test .
