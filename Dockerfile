@@ -1,18 +1,18 @@
-FROM python:3.8.8
+FROM python:3.8.8-slim
 USER root
 MAINTAINER Colk <iam@colk.dev>
 
-RUN apt-get update \
+RUN apt-get update -y \
 && apt-get -y install locales \
 && apt-get install -y ffmpeg \
 && apt-get install -y --no-install-recommends \
 && apt-get -y clean \
 && rm -rf /var/lib/apt/lists/*
 
-ENV LC_ALL ja_JP.UTF-8
+ENV LC_ALL en_US.UTF-8
 ENV TZ JST-9
 ENV TERM xtermdocker-attachingdocker-attaching
-RUN localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+RUN localedef -f UTF-8 -i en_US en_US.UTF-8
 
 RUN pip install --upgrade pip && pip install --upgrade setuptools
 
