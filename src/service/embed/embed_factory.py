@@ -3,8 +3,8 @@ from typing import Optional
 import discord
 
 from config import ROYAL_EMBLEM_URL
-from src.client.global_client import GlobalClient
 from src.utils.discd import get_user_icon_url
+from src.client.global_client import GlobalClient
 
 
 class EmbedFactory:
@@ -30,7 +30,7 @@ class EmbedFactory:
         else:
             customize_message = "行幸"
 
-        embed.title = "†卍 {} 卍† ".format(customize_message)
+        embed.title = "†卍 {} 卍†".format(customize_message)
         embed.description = "{} が{}なさいました。".format(member.display_name, customize_message)
 
         return embed

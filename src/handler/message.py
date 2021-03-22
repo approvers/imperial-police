@@ -9,6 +9,7 @@ class MessageHandler:
         self.message: discord.Message = message
 
     async def handle(self):
+        # TODO: ここがデータ渡しであることをわすれている
         questions: ManyQuestions = ManyQuestions(self.message)
         vcdiff_cleaner: VCDiffCleaner = VCDiffCleaner(self.message)
 

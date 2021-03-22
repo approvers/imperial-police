@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import discord
 
-from config import ROYAL_ROOM_ID, ROYAL_QUALIFICATION_ROLE_ID
+from config import ROYAL_QUALIFICATION_ROLE_ID, ROYAL_ROOM_ID
 from src.client.global_client import GlobalClient
 
 

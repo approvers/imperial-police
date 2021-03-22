@@ -1,9 +1,9 @@
-from typing import Union, Optional
-import logging
+from typing import Optional
 
 import discord
 
-from config import ERROR_CROSS_URL
+from config import ERROR_CROSS_URL, MAINTAINER_DISCORD_ID
+from src.exceptions.misunderstanding import MisunderstandingException
 from src.utils.discd import get_user_icon_url
 from src.client.global_client import GlobalClient
 
@@ -21,7 +21,7 @@ class ExceptionEmbedFactory:
 
     def make(self, caught_error: Exception) -> discord.Embed:
         embed: discord.Embed = discord.Embed(
-            title="例外が発生あそばされました",
+            title="お例外が発生あそばされました",
             color=0xed2102
         )
 
@@ -29,5 +29,9 @@ class ExceptionEmbedFactory:
         embed.set_thumbnail(url=ERROR_CROSS_URL)
 
         embed.add_field(name="例外の内容", value="```\n{}\n```".format(caught_error))
+
+        if type(caught_error) is MisunderstandingException:
+            embed.description = "この例外は <@!{}> が仕様を適当に推測して実装した箇所で、".format(MAINTAINER_DISCORD_ID) + \
+                                "起こらないと思っていた事態が起こっていることを示しています。"
 
         return embed

@@ -4,11 +4,9 @@ import discord
 
 from config import DISCORD_TOKEN, DISCORD_INTENTS, BOT_EXCEPTION_IDS, MESSAGE_CHANNEL_ID
 from src.client.global_client import GlobalClient
+from src.service.embed.exception import ExceptionEmbedFactory
 from src.handler.message import MessageHandler
 from src.handler.voice import VoiceHandler
-from src.service.embed.embed_factory import EmbedFactory
-from src.service.embed.exception import ExceptionEmbedFactory
-from src.service.voice.execution import Execution
 
 
 class MainClient(discord.Client):
@@ -16,6 +14,7 @@ class MainClient(discord.Client):
         super(MainClient, self).__init__(intents=DISCORD_INTENTS)
 
         self.MESSAGE_CHANNEL: Optional[discord.TextChannel] = None
+        self.guild: Optional[discord.Guild] = None
 
     def launch(self) -> None:
         self.run(DISCORD_TOKEN)
@@ -25,10 +24,21 @@ class MainClient(discord.Client):
         if number_of_guilds != 1:
             raise RuntimeError("Error: This bot can run in only one server."
                                "But You are trying to run in {} server(s).".format(number_of_guilds))
+        self.guild: discord.Guild = self.guilds[0]
+
+        self.MESSAGE_CHANNEL = self.get_channel(MESSAGE_CHANNEL_ID)
 
         client: discord.Client = super(MainClient, self)
         GlobalClient.static_init(client)
-        self.MESSAGE_CHANNEL = self.get_channel(MESSAGE_CHANNEL_ID)
+
+        me_as_member: discord.Member = self.guild.get_member(self.user.id)
+        my_voice_state: discord.VoiceState = me_as_member.voice
+
+        if my_voice_state is None:
+            return
+
+        if my_voice_state.channel is not None:
+            await me_as_member.move_to(None)
 
     async def on_message(self, message: discord.Message):
         if message.author.bot and message.author.id not in BOT_EXCEPTION_IDS:
@@ -40,19 +50,6 @@ class MainClient(discord.Client):
             embed = ExceptionEmbedFactory().make(e)
             await self.MESSAGE_CHANNEL.send(embed=embed)
             raise e
-
-        if message.content.startswith("!debug-join"):
-            ch: discord.VoiceChannel = self.get_channel(743171615755468941)
-            await ch.connect(reconnect=False)
-
-        if message.content.startswith("!debug-embed"):
-            emb = EmbedFactory().make(message.author, False)
-            await message.channel.send(embed=emb)
-
-        if message.content.startswith("!debug-execute"):
-            exc: Execution = Execution(message.author)
-            if await exc.is_triggered():
-                await exc.execute()
 
     async def on_voice_state_update(
             self,

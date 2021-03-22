@@ -18,6 +18,7 @@ VC_STAY_LENGTH: int = 71
 ROYAL_EMBLEM_URL: str = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Imperial_Seal_of_Japan.svg/500px-Imperial_Seal_of_Japan.svg.png"
 ERROR_CROSS_URL: str = "https://illust8.com/wp-content/uploads/2018/08/mark_batsu_illust_898.png"
 EXECUTION_REASON: str = "皇宮警察だ！！！"
+MAINTAINER_DISCORD_ID: int = 554985192549515264
 
 VCDIFF_REGEXES: List[re.Pattern] = [
     re.compile(r"(.*?)が.*に入りました"),

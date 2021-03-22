@@ -10,7 +10,7 @@ from src.service.misc.royal_judge import RoyalJudge
 from src.client.global_client import GlobalClient
 
 
-class Royals(VoiceFunctionAbstract, ABC):
+class RoyalEmbed(VoiceFunctionAbstract, ABC):
     MESSAGE_CHANNEL: Optional[discord.TextChannel] = None
 
     def __init__(
@@ -20,7 +20,7 @@ class Royals(VoiceFunctionAbstract, ABC):
             member: discord.Member,
             is_join: Optional[bool]
     ):
-        Royals.static_check()
+        RoyalEmbed.static_check()
 
         self._is_triggered = False
         self.before: discord.VoiceState = before
@@ -53,4 +53,4 @@ class Royals(VoiceFunctionAbstract, ABC):
 
     async def execute(self):
         embed: discord.Embed = EmbedFactory().make(self.member, self.is_join)
-        await Royals.MESSAGE_CHANNEL.send(embed=embed)
+        await RoyalEmbed.MESSAGE_CHANNEL.send(embed=embed)
