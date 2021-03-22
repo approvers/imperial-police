@@ -1,6 +1,6 @@
-from typing import List
 import os
 import re
+from typing import List
 
 DISCORD_TOKEN = os.environ["IMPERIAL_POLICE_TOKEN"]
 

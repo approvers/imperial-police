@@ -1,7 +1,5 @@
 import discord
 
-import random
-
 from src.service.message.questions import ManyQuestions
 from src.service.message.vcdiff_cleaner import VCDiffCleaner
 

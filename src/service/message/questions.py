@@ -1,6 +1,6 @@
-from typing import Optional
 import random
 from abc import ABC
+from typing import Optional
 
 import discord
 

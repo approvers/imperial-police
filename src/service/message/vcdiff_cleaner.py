@@ -1,13 +1,13 @@
 import re
-from typing import Optional, List
 from abc import ABC
+from typing import Optional, List
 
 import discord
 
-from src.service.message.message_abs import MessageFunctionAbstract
-from src.utils import utils
 from config import VCDIFF_REGEXES
+from src.service.message.message_abs import MessageFunctionAbstract
 from src.service.data.royal_family_judge import ImperialHouseholdAgencyLibrary
+from src.utils import utils
 
 
 class VCDiffCleaner(MessageFunctionAbstract, ABC):
