@@ -1,6 +1,6 @@
 import discord
 
-from config import DISCORD_TOKEN
+from config import DISCORD_TOKEN, DISCORD_INTENTS
 from src.service.embed.embed_factory import EmbedFactory
 from src.service.data.royal_family_judge import ImperialHouseholdAgencyLibrary
 from src.handler.message import MessageHandler
@@ -9,8 +9,7 @@ from src.handler.voice import VoiceHandler
 
 class MainClient(discord.Client):
     def __init__(self) -> None:
-        intents = discord.Intents.all()
-        super(MainClient, self).__init__(intents=intents)
+        super(MainClient, self).__init__(intents=DISCORD_INTENTS)
 
     def launch(self) -> None:
         self.run(DISCORD_TOKEN)

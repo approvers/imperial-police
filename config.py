@@ -2,7 +2,10 @@ import os
 import re
 from typing import List
 
+from discord import Intents
+
 DISCORD_TOKEN = os.environ["IMPERIAL_POLICE_TOKEN"]
+DISCORD_INTENTS: Intents = Intents.all()
 
 ROYAL_ROOM_ID: int = int(os.environ["IMPERIAL_POLICE_ROYAL_ROOM_ID"])
 ROYAL_QUALIFICATION_ROLE_ID: int = int(os.environ["IMPERIAL_POLICE_ROYAL_QUALIFICATION_ID"])
