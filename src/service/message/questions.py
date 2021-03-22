@@ -13,6 +13,8 @@ class ManyQuestions(MessageFunctionAbstract, ABC):
         self._is_triggered: Optional[bool] = None
 
     def is_triggered(self) -> bool:
+        if self.message.author.bot:
+            return self._is_triggered
         if "???" in self.message.content:
             self._is_triggered = True
         else:

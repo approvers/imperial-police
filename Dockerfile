@@ -1,4 +1,4 @@
-FROM python:3.8.8-slim
+FROM python:3.8.7-slim
 USER root
 MAINTAINER Colk <iam@colk.dev>
 
