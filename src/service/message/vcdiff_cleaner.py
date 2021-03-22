@@ -6,7 +6,7 @@ import discord
 
 from config import VCDIFF_REGEXES
 from src.service.message.message_abs import MessageFunctionAbstract
-from src.service.data.royal_family_judge import ImperialHouseholdAgencyLibrary
+from src.service.misc.royal_judge import RoyalJudge
 from src.utils import utils
 
 
@@ -23,17 +23,19 @@ class VCDiffCleaner(MessageFunctionAbstract, ABC):
 
         embed = self.message.embeds[0]
 
-        royal_family_ids: List[int] = ImperialHouseholdAgencyLibrary.get_royal_member_id_list()
+        royal_family_ids: List[int] = RoyalJudge.get_royal_member_id_list()
         if not utils.includes(embed.thumbnail.url, royal_family_ids):
             return self._is_triggered
 
-        if ImperialHouseholdAgencyLibrary.get_royal_room_name() not in embed.title:
+        if RoyalJudge.get_royal_room().name not in embed.title:
             return self._is_triggered
 
         for regex in VCDIFF_REGEXES:
             if re.search(regex, embed.title):
                 self._is_triggered = True
                 return self._is_triggered
+
+        return self._is_triggered
 
     async def execute(self):
         await self.message.delete(delay=None)
