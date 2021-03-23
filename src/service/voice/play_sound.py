@@ -67,11 +67,25 @@ class PlaySound(VoiceFunctionAbstract, ABC):
         if not self._is_triggered:
             return
 
-        number_of_voice_clients: int = len(GlobalClient.client.voice_clients)
-
         voice_client: discord.VoiceClient = await PlaySound.PRISON_CHANNEL.connect(reconnect=False)
-        voice_client.play(discord.FFmpegPCMAudio(source=NATIONAL_ANTHEM))
+        voice_client.play(discord.FFmpegPCMAudio(NATIONAL_ANTHEM))
         PlaySound.IS_EXECUTING = True
 
         await asyncio.sleep(VC_STAY_LENGTH)
         await voice_client.disconnect(force=True)
+
+    # async def do(self):
+    #     """
+    #     実際にPartyIchiyoを実行する
+    #     """
+    #     voice_client = await self.base_voice_channel.connect(reconnect=False)
+    #     if self.music == 0:
+    #         chosen_music = random.choice(list(PartyIchiyo.MUSICS_LIST.values()))
+    #         voice_client.play(discord.FFmpegPCMAudio(chosen_music))
+    #     else:
+    #         chosen_music = PartyIchiyo.MUSICS_LIST[self.music]
+    #         voice_client.play(discord.FFmpegPCMAudio(chosen_music))
+    #     await self.kikisen_channel.send("パーティー Nigth")
+    #     sleep_time = MP3(chosen_music).info.length
+    #     await asyncio.sleep(sleep_time + 0.5)
+    #     await voice_client.disconnect(force=True)
