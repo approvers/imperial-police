@@ -9,12 +9,14 @@ class MessageHandler:
         self.message: discord.Message = message
 
     async def handle(self):
-        # TODO: ここがデータ渡しであることをわすれている
         questions: ManyQuestions = ManyQuestions(self.message)
         vcdiff_cleaner: VCDiffCleaner = VCDiffCleaner(self.message)
 
-        if questions.is_triggered():
+        questions_trigger: bool = questions.is_triggered()
+        vcdiff_cleaner_trigger: bool = vcdiff_cleaner.is_triggered()
+
+        if questions_trigger:
             await questions.execute()
 
-        if vcdiff_cleaner.is_triggered():
+        if vcdiff_cleaner_trigger:
             await vcdiff_cleaner.execute()

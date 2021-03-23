@@ -28,7 +28,8 @@ class MeHandler:
             await unmute(self.me)
 
         if self.after.channel is None:
-            PlaySound.disconnected()
+            await PlaySound.disconnected()
+            return
 
-        if self.after.channel.id != PRISON_CHANNEL_ID:
+        if self.after.channel.id != PRISON_CHANNEL_ID and self.after.channel is not None:
             await self.me.move_to(MeHandler.PRISON_CHANNEL)

@@ -1,6 +1,6 @@
 import discord
 
-from src.handler.my_handler import MeHandler
+from src.handler.me_handler import MeHandler
 from src.service.voice.royal_embed import RoyalEmbed
 from src.service.voice.mover import Mover
 from src.service.voice.play_sound import PlaySound
@@ -28,16 +28,19 @@ class VoiceHandler:
             my_handler: MeHandler = MeHandler(self.member, self.before, self.after)
             await my_handler.handle()
 
-        # TODO: ここがデータ渡しであることをわすれている
         royals: RoyalEmbed = RoyalEmbed(self.before, self.after, self.member, self.is_join)
-        sound: PlaySound = PlaySound(self.member, self.after, self.is_join)
         mover: Mover = Mover(self.member, self.after, self.is_join)
+        sound: PlaySound = PlaySound(self.member, self.after, self.is_join)
 
-        if royals.is_triggered():
+        royals_trigger: bool = royals.is_triggered()
+        mover_trigger: bool = mover.is_triggered()
+        sound_trigger: bool = await sound.is_triggered()
+
+        if royals_trigger:
             await royals.execute()
 
-        if mover.is_triggered():
+        if mover_trigger:
             await mover.execute()
 
-        if await sound.is_triggered():
+        if sound_trigger:
             await sound.execute()

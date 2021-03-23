@@ -4,9 +4,10 @@ from typing import Optional
 
 import discord
 
-from config import NATIONAL_ANTHEM, VC_STAY_LENGTH, PRISON_CHANNEL_ID, ROYAL_ROOM_ID
+from config import NATIONAL_ANTHEM, VC_STAY_LENGTH, PRISON_CHANNEL_ID
 from src.service.voice.voice_abs import VoiceFunctionAbstract
 from src.service.misc.royal_judge import RoyalJudge
+from src.exceptions.misunderstanding import MisunderstandingException
 from src.client.global_client import GlobalClient
 
 
@@ -15,8 +16,16 @@ class PlaySound(VoiceFunctionAbstract, ABC):
     PRISON_CHANNEL: Optional[discord.VoiceChannel] = None
 
     @classmethod
-    def disconnected(cls):
+    async def disconnected(cls):
         cls.IS_EXECUTING = False
+
+        number_of_voice_clients: int = len(GlobalClient.client.voice_clients)
+        if number_of_voice_clients > 1:
+            raise MisunderstandingException("The coder thought there can be only one or no voice client,"
+                                            "but got {}.".format(number_of_voice_clients))
+
+        if number_of_voice_clients == 1:
+            await GlobalClient.client.voice_clients[0].disconnect()
 
     def __init__(self, member: discord.Member, after: discord.VoiceState, is_join: bool):
         PlaySound.static_check()
@@ -34,6 +43,9 @@ class PlaySound(VoiceFunctionAbstract, ABC):
     async def is_triggered(self) -> bool:
         self._is_triggered = False
 
+        if PlaySound.IS_EXECUTING:
+            return self._is_triggered
+
         if not self.is_join and self.is_join is not None:
             return self._is_triggered
 
@@ -43,8 +55,10 @@ class PlaySound(VoiceFunctionAbstract, ABC):
         if RoyalJudge.is_royal_family_member_from_id(self.member.id):
             return self._is_triggered
 
-        if PlaySound.IS_EXECUTING:
-            return self._is_triggered
+        number_of_voice_clients: int = len(GlobalClient.client.voice_clients)
+        if number_of_voice_clients > 1:
+            raise MisunderstandingException("The coder thought there can be only one or no voice client,"
+                                            "but got {}.".format(number_of_voice_clients))
 
         self._is_triggered = True
         return self._is_triggered
@@ -53,14 +67,11 @@ class PlaySound(VoiceFunctionAbstract, ABC):
         if not self._is_triggered:
             return
 
-        try:
-            voice_client: discord.VoiceClient = await PlaySound.PRISON_CHANNEL.connect(reconnect=False)
-            voice_client.play(discord.FFmpegPCMAudio(source=NATIONAL_ANTHEM))
-            PlaySound.IS_EXECUTING = True
+        number_of_voice_clients: int = len(GlobalClient.client.voice_clients)
 
-        except Exception as e:
-            PlaySound.IS_EXECUTING = False
-            raise e
+        voice_client: discord.VoiceClient = await PlaySound.PRISON_CHANNEL.connect(reconnect=False)
+        voice_client.play(discord.FFmpegPCMAudio(source=NATIONAL_ANTHEM))
+        PlaySound.IS_EXECUTING = True
 
         await asyncio.sleep(VC_STAY_LENGTH)
         await voice_client.disconnect(force=True)
