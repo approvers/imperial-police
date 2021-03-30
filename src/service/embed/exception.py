@@ -3,7 +3,7 @@ from typing import Optional
 import discord
 
 from config import ERROR_CROSS_URL, MAINTAINER_DISCORD_ID
-from src.exceptions.misunderstanding import MisunderstandingException
+from src.exception.misunderstanding import MisunderstandingException
 from src.utils.discd import get_user_icon_url
 from src.client.global_client import GlobalClient
 

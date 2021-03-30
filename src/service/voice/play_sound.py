@@ -7,7 +7,7 @@ import discord
 from config import NATIONAL_ANTHEM, VC_STAY_LENGTH, PRISON_CHANNEL_ID
 from src.service.voice.voice_abs import VoiceFunctionAbstract
 from src.service.misc.royal_judge import RoyalJudge
-from src.exceptions.misunderstanding import MisunderstandingException
+from src.exception.misunderstanding import MisunderstandingException
 from src.client.global_client import GlobalClient
 
 
