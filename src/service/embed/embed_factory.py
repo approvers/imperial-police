@@ -13,6 +13,7 @@ class EmbedFactory:
 
     def __init__(self) -> None:
         EmbedFactory.static_check()
+        pass
 
     @classmethod
     def static_check(cls):
