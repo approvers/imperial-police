@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+"discord.py" = "~=1.5.1"
+requests = ">=2.25.1"
+lxml = "==4.6.3"
+mutagen = "==1.45.1"
+PyNaCl = "==1.4.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

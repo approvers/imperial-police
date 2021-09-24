@@ -2,24 +2,28 @@ FROM python:3.8.8-slim
 USER root
 MAINTAINER Colk <iam@colk.dev>
 
-RUN apt-get update -y \
-&& apt-get -y install locales \
-&& apt-get install -y ffmpeg \
-&& apt-get install -y --no-install-recommends \
-&& apt-get -y clean \
-&& rm -rf /var/lib/apt/lists/*
+ENV LC_ALL=en_US.UTF-8 \
+    TZ=JST-9 \
+    TERM=xtermdocker-attachingdocker-attaching
 
-ENV LC_ALL en_US.UTF-8
-ENV TZ JST-9
-ENV TERM xtermdocker-attachingdocker-attaching
-RUN localedef -f UTF-8 -i en_US en_US.UTF-8
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    locales ffmpeg \
+    && apt-get upgrade -y \
+    && localedef -f UTF-8 -i en_US en_US.UTF-8 \
+    && apt-get autoremove -y \
+    && apt-get autoclean -y \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && pip install --upgrade setuptools
+RUN pip install --upgrade pip \
+    && pip install --upgrade setuptools
 
-RUN mkdir /deploy/
 COPY ./ /deploy/imperial-police
 
 WORKDIR /deploy/imperial-police
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --upgrade setuptools \
+    && pip install pipenv \
+    && pipenv sync --system --dev
 
-CMD ["python3","/deploy/imperial-police/main.py"]
+CMD ["python","main.py"]
