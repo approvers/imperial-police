@@ -14,6 +14,7 @@ class MainClient(discord.Client):
         super(MainClient, self).__init__(intents=DISCORD_INTENTS)
 
         self.MESSAGE_CHANNEL: Optional[discord.TextChannel] = None
+        self.guild: Optional[discord.Guild] = None
 
     def launch(self) -> None:
         self.run(DISCORD_TOKEN)
@@ -23,13 +24,14 @@ class MainClient(discord.Client):
         if number_of_guilds != 1:
             raise RuntimeError("Error: This bot can run in only one server."
                                "But You are trying to run in {} server(s).".format(number_of_guilds))
+        self.guild: discord.Guild = self.guilds[0]
 
         self.MESSAGE_CHANNEL = self.get_channel(MESSAGE_CHANNEL_ID)
 
         client: discord.Client = super(MainClient, self)
         GlobalClient.static_init(client)
 
-        me_as_member: discord.Member = GlobalClient.guild.get_member(self.user.id)
+        me_as_member: discord.Member = self.guild.get_member(self.user.id)
         my_voice_state: discord.VoiceState = me_as_member.voice
 
         if my_voice_state is None:
