@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 "discord.py" = "~=1.5.1"
 requests = ">=2.25.1"
-lxml = "==4.6.3"
+lxml = "==4.6.5"
 mutagen = "==1.45.1"
 PyNaCl = "==1.4.0"
 
